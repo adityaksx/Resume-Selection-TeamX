@@ -138,3 +138,61 @@ class TestNormalizeSkills:
         result = normalize_skills(raw)
         assert result == ["Node.js"]
         assert len(result) == 1
+
+    def test_duplicate_aliases_collapse(self):
+        """React, ReactJS, React.js all collapse to a single canonical React."""
+        raw = ["React", "ReactJS", "React.js"]
+        result = normalize_skills(raw)
+        assert result == ["React"]
+        assert len(result) == 1
+
+
+class TestFalsePositiveProtection:
+    """Phase 3 critical tests: prevent technically different skills from merging."""
+
+    def test_java_vs_javascript(self):
+        """Java and JavaScript must remain distinct technologies."""
+        assert normalize_skill("Java") == "Java"
+        assert normalize_skill("JavaScript") == "JavaScript"
+        assert normalize_skill("java") == "Java"
+        assert normalize_skill("javascript") == "JavaScript"
+        assert normalize_skill("Java") != "JavaScript"
+        assert normalize_skill("JavaScript") != "Java"
+
+    def test_c_vs_cpp(self):
+        """C and C++ must remain distinct languages."""
+        assert normalize_skill("C") == "C"
+        assert normalize_skill("c") == "C"
+        assert normalize_skill("C++") == "C++"
+        assert normalize_skill("c++") == "C++"
+        assert normalize_skill("C") != "C++"
+        assert normalize_skill("C++") != "C"
+
+    def test_git_vs_github(self):
+        """Git and GitHub must remain distinct."""
+        assert normalize_skill("Git") == "Git"
+        assert normalize_skill("git") == "Git"
+        assert normalize_skill("GitHub") == "GitHub"
+        assert normalize_skill("github") == "GitHub"
+        assert normalize_skill("Git") != "GitHub"
+
+    def test_aws_vs_azure(self):
+        """AWS and Azure must remain distinct cloud providers."""
+        assert normalize_skill("AWS") == "AWS"
+        assert normalize_skill("aws") == "AWS"
+        assert normalize_skill("Azure") == "Azure"
+        assert normalize_skill("azure") == "Azure"
+        assert normalize_skill("AWS") != "Azure"
+
+    def test_react_vs_react_native(self):
+        """React and React Native must remain distinct."""
+        assert normalize_skill("React") == "React"
+        assert normalize_skill("React Native") == "React Native"
+        assert normalize_skill("react native") == "React Native"
+        assert normalize_skill("React") != "React Native"
+
+    def test_restful_apis(self):
+        """RESTful APIs normalizes to canonical 'REST API'."""
+        assert normalize_skill("RESTful APIs") == "REST API"
+        assert normalize_skill("restful apis") == "REST API"
+

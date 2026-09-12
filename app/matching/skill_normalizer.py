@@ -18,6 +18,8 @@ SKILL_ALIASES: dict[str, str] = {
     "reactjs": "React",
     "react.js": "React",
     "react js": "React",
+    "react native": "React Native",
+    "react-native": "React Native",
     "nodejs": "Node.js",
     "node js": "Node.js",
     "node.js": "Node.js",
@@ -25,6 +27,7 @@ SKILL_ALIASES: dict[str, str] = {
     "mongo db": "MongoDB",
     "mongodb": "MongoDB",
     "restful api": "REST API",
+    "restful apis": "REST API",
     "rest apis": "REST API",
     "rest api development": "REST API",
     "expressjs": "Express",
@@ -44,6 +47,9 @@ SKILL_ALIASES: dict[str, str] = {
     "css": "CSS",
     "css3": "CSS",
     "amazon web services": "AWS",
+    "aws": "AWS",
+    "azure": "Azure",
+    "microsoft azure": "Azure",
     "google cloud platform": "GCP",
     "gcp": "GCP",
     "ci/cd": "CI/CD",
@@ -128,25 +134,26 @@ def normalize_skill(skill: str) -> str:
     if key in SKILL_ALIASES:
         return SKILL_ALIASES[key]
 
-    # 2. Fuzzy match against alias keys
-    settings = get_settings()
-    threshold = settings.fuzzy_match_threshold
+    # 2. Fuzzy match against alias keys (only for tokens with length >= 4 to protect short tokens)
+    if len(key) >= 4:
+        settings = get_settings()
+        threshold = settings.fuzzy_match_threshold
 
-    alias_keys = list(SKILL_ALIASES.keys())
-    result = process.extractOne(
-        key,
-        alias_keys,
-        scorer=fuzz.ratio,
-        score_cutoff=threshold,
-    )
-    if result is not None:
-        matched_key, score, _ = result
-        canonical = SKILL_ALIASES[matched_key]
-        logger.debug(
-            "Fuzzy matched '%s' → '%s' (via alias '%s', score=%d)",
-            skill, canonical, matched_key, score,
+        alias_keys = list(SKILL_ALIASES.keys())
+        result = process.extractOne(
+            key,
+            alias_keys,
+            scorer=fuzz.ratio,
+            score_cutoff=threshold,
         )
-        return canonical
+        if result is not None:
+            matched_key, score, _ = result
+            canonical = SKILL_ALIASES[matched_key]
+            logger.debug(
+                "Fuzzy matched '%s' → '%s' (via alias '%s', score=%d)",
+                skill, canonical, matched_key, score,
+            )
+            return canonical
 
     # 3. No match — return cleaned original
     return cleaned
