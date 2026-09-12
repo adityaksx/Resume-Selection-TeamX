@@ -27,6 +27,9 @@ class Settings:
     # Fuzzy matching threshold (plan.md §12)
     fuzzy_match_threshold: int = 85
 
+    # Optional server-side Gemini API key for advisory AI features (plan.md Phase 7)
+    gemini_api_key: str = field(default_factory=lambda: os.getenv("GEMINI_API_KEY", "").strip())
+
     def validate(self) -> None:
         """Validate application settings.
         
