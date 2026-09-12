@@ -1,6 +1,6 @@
 """Streamlit UI for the InternLoom Smart Shortlisting Engine.
 
-This module is presentation/orchestration only. Ranking remains owned by the
+The UI layer owns presentation/orchestration only. Ranking remains owned by the
 Python matching pipeline; AI features are optional and server-side.
 """
 
@@ -39,136 +39,149 @@ logger = logging.getLogger(__name__)
 
 CUSTOM_CSS = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
 :root {
     --loom-bg: #eff5eb;
     --loom-green: #8cc34f;
     --loom-green-hover: #7ab040;
     --loom-slate: #253d47;
-    --loom-slate-2: #1c2e35;
     --loom-white: #ffffff;
     --loom-border: rgba(37, 61, 71, 0.10);
     --loom-muted: #64748b;
 }
 
-html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
-.stApp { background: var(--loom-bg); }
-.block-container { max-width: 1400px; padding-top: 1.4rem; padding-bottom: 3rem; }
+/* Keep selectors limited to stable Streamlit test IDs / root classes. */
+.stApp {
+    background: var(--loom-bg);
+}
 
-/* Hide Streamlit chrome that creates visual clutter. */
-header[data-testid="stHeader"] { background: transparent; }
-#MainMenu { visibility: hidden; }
-footer { visibility: hidden; }
+.block-container {
+    max-width: 1400px;
+    padding-top: 1.4rem;
+    padding-bottom: 3rem;
+}
+
+header[data-testid="stHeader"] {
+    background: transparent;
+}
 
 .loom-hero {
     background: var(--loom-slate);
-    border-radius: 22px;
-    padding: 2rem 2.2rem;
-    margin-bottom: 1.4rem;
-    box-shadow: 0 18px 40px rgba(37, 61, 71, 0.13);
-    border-left: 7px solid var(--loom-green);
+    border-radius: 20px;
+    padding: 1.7rem 1.8rem;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 14px 32px rgba(37, 61, 71, 0.12);
+    border-left: 6px solid var(--loom-green);
 }
+
 .loom-kicker {
     color: var(--loom-green);
-    font-size: .78rem;
+    font-size: 0.76rem;
     font-weight: 700;
-    letter-spacing: 1.2px;
-    margin-bottom: .35rem;
+    letter-spacing: 1.1px;
+    margin-bottom: 0.35rem;
 }
-.loom-title { color: #fff; font-size: 2.35rem; font-weight: 700; line-height: 1.15; margin: 0; }
-.loom-subtitle { color: #d7e0e5; font-size: .98rem; line-height: 1.6; margin-top: .6rem; }
+
+.loom-title {
+    color: #ffffff;
+    font-size: 2.15rem;
+    font-weight: 700;
+    line-height: 1.16;
+    margin: 0;
+}
+
+.loom-subtitle {
+    color: #d7e0e5;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin-top: 0.55rem;
+    max-width: 950px;
+}
+
 .loom-status {
     display: inline-block;
-    padding: .38rem .75rem;
+    margin-top: 0.9rem;
+    padding: 0.35rem 0.7rem;
     border-radius: 999px;
-    background: rgba(255,255,255,.10);
-    color: #fff;
-    font-size: .78rem;
-    white-space: nowrap;
+    background: rgba(255, 255, 255, 0.10);
+    color: #ffffff;
+    font-size: 0.76rem;
     font-weight: 600;
 }
 
-.loom-card {
+.loom-rank-card {
     background: var(--loom-white);
     border: 1px solid var(--loom-border);
     border-radius: 16px;
-    padding: 1.1rem 1.25rem;
-    box-shadow: 0 8px 22px rgba(37,61,71,.045);
-    margin-bottom: .9rem;
+    padding: 1rem 1.1rem;
+    margin-bottom: 0.8rem;
+    box-shadow: 0 6px 18px rgba(37, 61, 71, 0.045);
 }
-.loom-card-dark {
-    background: var(--loom-slate);
-    color: #fff;
-    border-radius: 16px;
-    padding: 1.25rem;
-    box-shadow: 0 8px 22px rgba(37,61,71,.10);
+
+.loom-top1 { border-left: 5px solid #d4af37; }
+.loom-top2 { border-left: 5px solid #94a3b8; }
+.loom-top3 { border-left: 5px solid #b87333; }
+
+.score-pill {
+    display: inline-block;
+    padding: 0.3rem 0.65rem;
+    border-radius: 9px;
+    background: #eef8e3;
+    color: var(--loom-slate);
+    font-weight: 700;
+    font-size: 0.84rem;
+    white-space: nowrap;
 }
-.loom-rank-card {
-    background: #fff;
-    border: 1px solid var(--loom-border);
-    border-radius: 18px;
-    padding: 1.2rem 1.3rem;
-    margin-bottom: .9rem;
-}
-.loom-top1 { border-left: 6px solid #d4af37; }
-.loom-top2 { border-left: 6px solid #94a3b8; }
-.loom-top3 { border-left: 6px solid #b87333; }
 
 .badge {
     display: inline-block;
-    padding: .25rem .58rem;
+    padding: 0.22rem 0.52rem;
     border-radius: 999px;
-    margin: .12rem .18rem .12rem 0;
-    font-size: .76rem;
+    margin: 0.1rem 0.12rem 0.1rem 0;
+    font-size: 0.74rem;
     font-weight: 600;
 }
+
 .badge-match { background: #dcfce7; color: #166534; }
 .badge-miss { background: #fee2e2; color: #991b1b; }
 .badge-pref { background: #e0e7ff; color: #3730a3; }
 
-.score-pill {
-    display: inline-block;
-    padding: .32rem .7rem;
-    border-radius: 10px;
-    background: #eef8e3;
-    color: var(--loom-slate);
-    font-weight: 700;
-    font-size: .85rem;
+.small-muted {
+    color: var(--loom-muted);
+    font-size: 0.8rem;
 }
-.small-muted { color: var(--loom-muted); font-size: .82rem; }
-.section-note { color: var(--loom-muted); font-size: .86rem; margin-top: -.35rem; margin-bottom: .8rem; }
 
-/* Primary buttons use the reference green. */
-.stButton > button[kind="primary"] {
-    background: var(--loom-green) !important;
-    border: 0 !important;
-    color: #fff !important;
-    border-radius: 10px !important;
-    font-weight: 700 !important;
-    box-shadow: 0 7px 18px rgba(140,195,79,.24) !important;
+.section-note {
+    color: var(--loom-muted);
+    font-size: 0.84rem;
+    margin-top: -0.3rem;
+    margin-bottom: 0.75rem;
 }
-.stButton > button[kind="primary"]:hover { background: var(--loom-green-hover) !important; }
 
-/* Uploaders. */
 [data-testid="stFileUploaderDropzone"] {
-    background: rgba(255,255,255,.72);
-    border: 2px dashed rgba(37,61,71,.18);
-    border-radius: 14px;
+    border-radius: 12px;
 }
 
-/* Dataframe / tables. */
 [data-testid="stDataFrame"] {
-    border-radius: 14px;
+    border-radius: 12px;
     overflow: hidden;
 }
 
 @media (max-width: 900px) {
-    .loom-title { font-size: 1.75rem; }
-    .loom-hero { padding: 1.4rem; }
+    .loom-title { font-size: 1.65rem; }
+    .loom-hero { padding: 1.35rem; }
 }
 </style>
 """
+
+
+@st.cache_data(show_spinner=False)
+def _gemini_available_cached() -> bool:
+    """Cache the configuration check so every rerun does not repeat it."""
+    try:
+        return bool(is_gemini_available())
+    except Exception:
+        logger.exception("Gemini availability check failed")
+        return False
 
 
 def _safe(text: Any) -> str:
@@ -178,7 +191,27 @@ def _safe(text: Any) -> str:
 def _badges(items: list[str], css_class: str, empty: str = "None") -> str:
     if not items:
         return f"<span class='small-muted'>{_safe(empty)}</span>"
-    return " ".join(f"<span class='badge {css_class}'>{_safe(item)}</span>" for item in items)
+    return " ".join(
+        f"<span class='badge {css_class}'>{_safe(item)}</span>" for item in items
+    )
+
+
+def _init_state() -> None:
+    defaults = {
+        "jd": None,
+        "resumes": {},
+        "ranking": None,
+        "chat_history": [],
+        "pending_chat_prompt": None,
+        "jd_fairness_report": None,
+        "comparison_ai_cache": {},
+        "improvement_cache": {},
+        "candidate_ai_explanation": None,
+        "selected_view": "Shortlist",
+    }
+    for key, value in defaults.items():
+        if key not in st.session_state:
+            st.session_state[key] = value
 
 
 def setup_page() -> None:
@@ -188,38 +221,38 @@ def setup_page() -> None:
         layout="wide",
         initial_sidebar_state="collapsed",
     )
+    _init_state()
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
 
 
 def render_header() -> None:
-    ai_status = "Gemini AI Active" if is_gemini_available() else "Local ML Mode"
-    status_dot = "🟢" if is_gemini_available() else "⚪"
+    ai_active = _gemini_available_cached()
+    ai_status = "Gemini AI Active" if ai_active else "Local ML Mode"
+    status_dot = "●" if ai_active else "○"
+
     st.markdown(
         f"""
-        <div class="loom-hero">
-            <div style="display:flex;justify-content:space-between;gap:1rem;align-items:flex-start;">
-                <div>
-                    <div class="loom-kicker">EXPLAINABLE AI RECRUITING</div>
-                    <div class="loom-title">InternLoom Smart Shortlisting Engine</div>
-                    <div class="loom-subtitle">
-                        Rank every candidate using explicit keyword matching + local semantic matching,
-                        then use AI only for recruiter-facing explanations and advisory features.
-                    </div>
-                </div>
-                <div class="loom-status">{status_dot} {ai_status}</div>
+        <section class="loom-hero">
+            <div class="loom-kicker">EXPLAINABLE AI RECRUITING</div>
+            <div class="loom-title">InternLoom Smart Shortlisting Engine</div>
+            <div class="loom-subtitle">
+                Rank every candidate using explicit keyword matching + local semantic matching,
+                then use AI only for recruiter-facing explanations and advisory features.
             </div>
-        </div>
+            <div class="loom-status">{status_dot} {ai_status}</div>
+        </section>
         """,
         unsafe_allow_html=True,
     )
 
 
-def upload_section() -> tuple:
+def upload_section() -> tuple[Any, list[Any]]:
     st.markdown("### Upload Job & Candidate Documents")
     st.markdown(
         "<div class='section-note'>Accepted: PDF, DOCX and TXT. Mixed resume formats are supported.</div>",
         unsafe_allow_html=True,
     )
+
     col1, col2 = st.columns(2, gap="large")
 
     with col1:
@@ -230,8 +263,8 @@ def upload_section() -> tuple:
             key="jd_upload",
             help="One Job Description in PDF, DOCX or TXT format.",
         )
-        if jd_file:
-            st.success(f"Loaded: {jd_file.name}")
+        if jd_file is not None:
+            st.caption(f"Loaded: {jd_file.name}")
 
     with col2:
         st.markdown("#### Candidate Resumes")
@@ -243,12 +276,12 @@ def upload_section() -> tuple:
             help="Upload your candidate batch. PDF, DOCX and TXT may be mixed.",
         )
         if resume_files:
-            st.success(f"Loaded {len(resume_files)} resume(s)")
+            st.caption(f"Loaded {len(resume_files)} resume(s)")
 
     return jd_file, resume_files
 
 
-def run_pipeline(jd_file, resume_files: list) -> None:
+def _run_pipeline(jd_file, resume_files: list) -> None:
     if not jd_file or not resume_files:
         st.error("Please upload one Job Description and at least one resume.")
         return
@@ -257,11 +290,13 @@ def run_pipeline(jd_file, resume_files: list) -> None:
         st.write("1/4 Extracting Job Description text")
         try:
             jd_text = extract_text_from_uploaded_document(jd_file)
-        except DocumentParsingError as e:
-            st.error(f"JD parsing failed: {e}")
+        except DocumentParsingError as exc:
+            status.update(label="JD parsing failed", state="error")
+            st.error(f"JD parsing failed: {exc}")
             return
-        except Exception as e:
-            st.error(f"Unexpected JD parsing error: {e}")
+        except Exception as exc:
+            status.update(label="JD parsing failed", state="error")
+            st.error(f"Unexpected JD parsing error: {exc}")
             logger.exception("JD parsing failure")
             return
 
@@ -270,8 +305,9 @@ def run_pipeline(jd_file, resume_files: list) -> None:
             jd = extract_jd(jd_text)
             jd.required_skills = normalize_skills(jd.required_skills)
             jd.preferred_skills = normalize_skills(jd.preferred_skills)
-        except Exception as e:
-            st.error(f"JD extraction failed: {e}")
+        except Exception as exc:
+            status.update(label="JD extraction failed", state="error")
+            st.error(f"JD extraction failed: {exc}")
             logger.exception("JD extraction failure")
             return
 
@@ -280,11 +316,12 @@ def run_pipeline(jd_file, resume_files: list) -> None:
         failures: list[str] = []
         progress = st.progress(0, text="Processing resumes...")
 
-        for i, uploaded in enumerate(resume_files):
+        for i, uploaded in enumerate(resume_files, start=1):
             original_name = uploaded.name
             filename = original_name
             if filename in resumes:
-                filename = f"{filename}_{i + 1}"
+                filename = f"{filename}_{i}"
+
             try:
                 text = extract_text_from_uploaded_document(uploaded)
                 resume = extract_resume(text, filename=filename)
@@ -292,40 +329,52 @@ def run_pipeline(jd_file, resume_files: list) -> None:
                 for project in resume.projects:
                     project.technologies = normalize_skills(project.technologies)
                 resumes[filename] = resume
-            except DocumentParsingError as e:
-                failures.append(f"{original_name}: {e}")
-            except Exception as e:
-                failures.append(f"{original_name}: {e}")
+            except DocumentParsingError as exc:
+                failures.append(f"{original_name}: {exc}")
+            except Exception as exc:
+                failures.append(f"{original_name}: {exc}")
                 logger.exception("Resume processing failure: %s", original_name)
-            progress.progress((i + 1) / len(resume_files), text=f"Processed {i + 1}/{len(resume_files)}")
+
+            progress.progress(
+                i / len(resume_files),
+                text=f"Processed {i}/{len(resume_files)}",
+            )
 
         progress.empty()
+
         if not resumes:
             status.update(label="No usable resumes", state="error")
             st.error("No resume could be processed.")
             return
 
         if failures:
-            st.warning("Some documents were skipped:\n\n" + "\n".join(f"- {x}" for x in failures))
+            with st.expander(f"Skipped documents ({len(failures)})"):
+                for failure in failures:
+                    st.write(f"- {failure}")
 
         st.write("4/4 Calculating keyword + semantic scores")
         try:
             ranking = shortlist_candidates(jd, resumes)
-        except Exception as e:
+        except Exception as exc:
             status.update(label="Ranking failed", state="error")
-            st.error(f"Shortlisting pipeline failed: {e}")
+            st.error(f"Shortlisting pipeline failed: {exc}")
             logger.exception("Pipeline failure")
             return
 
-        status.update(label=f"Completed — ranked {len(ranking.candidates)} candidates", state="complete")
+        status.update(
+            label=f"Completed — ranked {len(ranking.candidates)} candidates",
+            state="complete",
+        )
 
     st.session_state["jd"] = jd
     st.session_state["resumes"] = resumes
     st.session_state["ranking"] = ranking
     st.session_state["chat_history"] = []
+    st.session_state["pending_chat_prompt"] = None
     st.session_state["jd_fairness_report"] = None
     st.session_state["comparison_ai_cache"] = {}
     st.session_state["improvement_cache"] = {}
+    st.session_state["candidate_ai_explanation"] = None
     st.success(f"Shortlisting complete for **{jd.role_title or 'this role'}**.")
 
 
@@ -340,14 +389,26 @@ def _render_candidate_skills(candidate: CandidateResult) -> None:
     left, right = st.columns(2)
     with left:
         st.markdown("**Required skills matched**")
-        st.markdown(_badges(candidate.matched_required_skills, "badge-match"), unsafe_allow_html=True)
+        st.markdown(
+            _badges(candidate.matched_required_skills, "badge-match"),
+            unsafe_allow_html=True,
+        )
         st.markdown("**Required skills missing**")
-        st.markdown(_badges(candidate.missing_required_skills, "badge-miss"), unsafe_allow_html=True)
+        st.markdown(
+            _badges(candidate.missing_required_skills, "badge-miss"),
+            unsafe_allow_html=True,
+        )
     with right:
         st.markdown("**Preferred skills matched**")
-        st.markdown(_badges(candidate.matched_preferred_skills, "badge-pref"), unsafe_allow_html=True)
+        st.markdown(
+            _badges(candidate.matched_preferred_skills, "badge-pref"),
+            unsafe_allow_html=True,
+        )
         st.markdown("**Preferred skills missing**")
-        st.markdown(_badges(candidate.missing_preferred_skills, "badge-miss"), unsafe_allow_html=True)
+        st.markdown(
+            _badges(candidate.missing_preferred_skills, "badge-miss"),
+            unsafe_allow_html=True,
+        )
 
 
 def render_shortlist_view(ranking: RankingResult, jd: JobDescription) -> None:
@@ -361,25 +422,35 @@ def render_shortlist_view(ranking: RankingResult, jd: JobDescription) -> None:
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("Candidates", len(ranking.candidates))
     m2.metric("Highest", f"{max(scores):.2f}")
-    m3.metric("Average", f"{sum(scores)/len(scores):.2f}")
+    m3.metric("Average", f"{sum(scores) / len(scores):.2f}")
     m4.metric("Lowest", f"{min(scores):.2f}")
 
     st.markdown("### Top 3")
-    st.caption("AI explanations are optional. Numerical ranking is always produced by the deterministic scoring engine.")
+    st.caption(
+        "AI explanations are optional. Numerical ranking is always produced by the deterministic scoring engine."
+    )
+
     top_classes = ["loom-top1", "loom-top2", "loom-top3"]
     for idx, candidate in enumerate(ranking.top_3):
+        card_class = top_classes[min(idx, 2)]
+        c1, c2 = st.columns([5, 1.2], vertical_alignment="center")
+        with c1:
+            st.markdown(
+                f"**#{candidate.rank} {_safe(candidate.candidate_name)}**",
+                unsafe_allow_html=True,
+            )
+            st.caption(
+                f"{candidate.filename or 'No filename'} · "
+                f"Keyword {candidate.keyword_score:.2f} · "
+                f"Semantic {candidate.semantic_score:.2f}"
+            )
+        with c2:
+            st.markdown(
+                f"<div class='score-pill'>{candidate.final_score:.2f}/100</div>",
+                unsafe_allow_html=True,
+            )
         st.markdown(
-            f"""
-            <div class="loom-rank-card {top_classes[min(idx, 2)]}">
-                <div style="display:flex;justify-content:space-between;gap:1rem;align-items:center;">
-                    <div>
-                        <div style="font-size:1.15rem;font-weight:700;color:#253d47;">#{candidate.rank} {_safe(candidate.candidate_name)}</div>
-                        <div class="small-muted">{_safe(candidate.filename or 'No filename')} · Keyword {candidate.keyword_score:.2f} · Semantic {candidate.semantic_score:.2f}</div>
-                    </div>
-                    <div class="score-pill">{candidate.final_score:.2f}/100</div>
-                </div>
-            </div>
-            """,
+            f"<div class='loom-rank-card {card_class}' style='margin-top:-3.2rem; padding:0; border:none; box-shadow:none; background:transparent;'></div>",
             unsafe_allow_html=True,
         )
         with st.expander(f"View top-{idx + 1} explanation and evidence", expanded=False):
@@ -388,18 +459,28 @@ def render_shortlist_view(ranking: RankingResult, jd: JobDescription) -> None:
 
     st.markdown("### Full Ranking")
     st.caption("Every uploaded candidate is shown. Final Score = 50% Keyword + 50% Semantic.")
+
     rows = []
-    for c in ranking.candidates:
-        req_total = len(c.matched_required_skills) + len(c.missing_required_skills)
-        rows.append({
-            "Rank": c.rank,
-            "Candidate": c.candidate_name,
-            "Final Score": round(c.final_score, 2),
-            "Keyword": round(c.keyword_score, 2),
-            "Semantic": round(c.semantic_score, 2),
-            "Required": f"{len(c.matched_required_skills)}/{req_total}" if req_total else "N/A",
-            "Missing Required": len(c.missing_required_skills),
-        })
+    for candidate in ranking.candidates:
+        req_total = len(candidate.matched_required_skills) + len(
+            candidate.missing_required_skills
+        )
+        rows.append(
+            {
+                "Rank": candidate.rank,
+                "Candidate": candidate.candidate_name,
+                "Final Score": round(candidate.final_score, 2),
+                "Keyword": round(candidate.keyword_score, 2),
+                "Semantic": round(candidate.semantic_score, 2),
+                "Required": (
+                    f"{len(candidate.matched_required_skills)}/{req_total}"
+                    if req_total
+                    else "N/A"
+                ),
+                "Missing Required": len(candidate.missing_required_skills),
+            }
+        )
+
     st.dataframe(
         pd.DataFrame(rows),
         use_container_width=True,
@@ -421,16 +502,22 @@ def _find_candidate(ranking: RankingResult, label: str) -> CandidateResult:
 def render_compare_view(ranking: RankingResult) -> None:
     st.subheader("Compare Two Candidates")
     st.caption("Comparison uses the same stored scores and skill evidence as the ranking.")
+
     if len(ranking.candidates) < 2:
         st.info("At least two candidates are required.")
         return
 
     labels = [f"#{c.rank} {c.candidate_name}" for c in ranking.candidates]
-    a_label, b_label = st.columns(2)
-    with a_label:
+    col_a, col_b = st.columns(2)
+    with col_a:
         selected_a = st.selectbox("Candidate A", labels, index=0, key="compare_a")
-    with b_label:
-        selected_b = st.selectbox("Candidate B", labels, index=1, key="compare_b")
+    with col_b:
+        selected_b = st.selectbox(
+            "Candidate B",
+            labels,
+            index=min(1, len(labels) - 1),
+            key="compare_b",
+        )
 
     cand_a = _find_candidate(ranking, selected_a)
     cand_b = _find_candidate(ranking, selected_b)
@@ -446,16 +533,19 @@ def render_compare_view(ranking: RankingResult) -> None:
     )
 
     left, mid, right = st.columns([4, 2, 4])
-    for col, candidate in ((left, cand_a), (right, cand_b)):
-        with col:
-            st.markdown(f"### #{candidate.rank} {candidate.candidate_name}")
-            _score_metrics(candidate)
-            _render_candidate_skills(candidate)
+    with left:
+        st.markdown(f"### #{cand_a.rank} {cand_a.candidate_name}")
+        _score_metrics(cand_a)
+        _render_candidate_skills(cand_a)
     with mid:
         st.markdown("### Differences")
         st.metric("Final", f"{cand_a.final_score - cand_b.final_score:+.2f}")
         st.metric("Keyword", f"{cand_a.keyword_score - cand_b.keyword_score:+.2f}")
         st.metric("Semantic", f"{cand_a.semantic_score - cand_b.semantic_score:+.2f}")
+    with right:
+        st.markdown(f"### #{cand_b.rank} {cand_b.candidate_name}")
+        _score_metrics(cand_b)
+        _render_candidate_skills(cand_b)
 
     st.markdown("### Shared and Unique Required Skills")
     s1, s2, s3 = st.columns(3)
@@ -466,11 +556,13 @@ def render_compare_view(ranking: RankingResult) -> None:
     s3.markdown(f"**Unique to {cand_b.candidate_name} ({len(comparison.unique_required_b)})**")
     s3.write(", ".join(comparison.unique_required_b) or "None")
 
-    if is_gemini_available():
+    if _gemini_available_cached():
         cache_key = f"{cand_a.rank}:{cand_b.rank}"
         if st.button("Explain Comparison with AI", type="primary", key="compare_ai"):
             with st.spinner("Generating evidence-grounded comparison..."):
-                st.session_state["comparison_ai_cache"][cache_key] = explain_comparison_with_ai(comparison)
+                st.session_state["comparison_ai_cache"][cache_key] = (
+                    explain_comparison_with_ai(comparison)
+                )
         if cache_key in st.session_state.get("comparison_ai_cache", {}):
             st.markdown(st.session_state["comparison_ai_cache"][cache_key])
     else:
@@ -489,39 +581,62 @@ def render_candidate_insights_view(ranking: RankingResult, jd: JobDescription) -
 
     st.markdown("### Semantic Evidence")
     if candidate.semantic_evidence:
-        for i, ev in enumerate(candidate.semantic_evidence[:6], start=1):
-            requirement = ev.get("requirement", "")
-            evidence = ev.get("best_matching_evidence", "") or "No matching evidence"
-            similarity = float(ev.get("similarity", 0.0))
-            with st.expander(f"Requirement {i} · {similarity * 100:.1f}%", expanded=(i == 1)):
+        for i, evidence_item in enumerate(candidate.semantic_evidence[:6], start=1):
+            requirement = evidence_item.get("requirement", "")
+            evidence = evidence_item.get("best_matching_evidence", "") or "No matching evidence"
+            similarity = float(evidence_item.get("similarity", 0.0))
+            with st.expander(
+                f"Requirement {i} · {similarity * 100:.1f}%",
+                expanded=(i == 1),
+            ):
                 st.markdown(f"**JD requirement:** {requirement}")
                 st.markdown(f"**Best resume evidence:** {evidence}")
-                st.progress(max(0.0, min(1.0, similarity)), text=f"Similarity: {similarity * 100:.1f}%")
+                st.progress(
+                    max(0.0, min(1.0, similarity)),
+                    text=f"Similarity: {similarity * 100:.1f}%",
+                )
     else:
         st.info("No semantic evidence is available for this candidate.")
 
     st.markdown("### Candidate Actions")
     c1, c2 = st.columns(2)
     with c1:
-        if is_gemini_available():
-            if st.button("Generate AI Explanation", type="primary", use_container_width=True, key="candidate_explain"):
+        if _gemini_available_cached():
+            if st.button(
+                "Generate AI Explanation",
+                type="primary",
+                use_container_width=True,
+                key="candidate_explain",
+            ):
                 with st.spinner("Generating explanation..."):
-                    st.session_state["candidate_ai_explanation"] = generate_ai_candidate_explanation(candidate)
+                    st.session_state["candidate_ai_explanation"] = (
+                        generate_ai_candidate_explanation(candidate)
+                    )
             if st.session_state.get("candidate_ai_explanation"):
                 st.markdown(st.session_state["candidate_ai_explanation"])
         else:
             st.markdown(candidate.explanation or "AI explanation unavailable.")
+
     with c2:
         cache_key = f"{candidate.rank}"
-        if st.button("How Can This Candidate Improve?", type="primary", use_container_width=True, key="candidate_improve"):
+        if st.button(
+            "How Can This Candidate Improve?",
+            type="primary",
+            use_container_width=True,
+            key="candidate_improve",
+        ):
             with st.spinner("Building improvement recommendations..."):
-                if is_gemini_available():
+                if _gemini_available_cached():
                     result = generate_candidate_improvement_advice(candidate, jd)
                 else:
                     missing = candidate.missing_required_skills
                     result = (
                         "### Priority improvement areas\n\n"
-                        + ("- " + "\n- ".join(missing) if missing else "- No explicit required-skill gaps were found.")
+                        + (
+                            "- " + "\n- ".join(missing)
+                            if missing
+                            else "- No explicit required-skill gaps were found."
+                        )
                     )
                 st.session_state["improvement_cache"][cache_key] = result
         if cache_key in st.session_state.get("improvement_cache", {}):
@@ -532,11 +647,9 @@ def render_recruiter_chat_view(ranking: RankingResult, jd: JobDescription) -> No
     st.subheader("Recruiter AI")
     st.caption("Ask about rankings, candidate differences, evidence, gaps, or interview questions.")
 
-    if not is_gemini_available():
+    ai_active = _gemini_available_cached()
+    if not ai_active:
         st.warning("Gemini AI is not configured. The deterministic shortlist remains available.")
-
-    if "chat_history" not in st.session_state:
-        st.session_state["chat_history"] = []
 
     suggestions = [
         "Why is #1 ranked above #2?",
@@ -544,17 +657,22 @@ def render_recruiter_chat_view(ranking: RankingResult, jd: JobDescription) -> No
         "Compare #1 and #3.",
         "How can #4 improve?",
     ]
-    cols = st.columns(len(suggestions))
+
+    suggestion_cols = st.columns(len(suggestions))
     for i, suggestion in enumerate(suggestions):
-        with cols[i]:
-            if st.button(suggestion, use_container_width=True, key=f"chat_suggestion_{i}"):
+        with suggestion_cols[i]:
+            if st.button(
+                suggestion,
+                use_container_width=True,
+                key=f"chat_suggestion_{i}",
+            ):
                 st.session_state["pending_chat_prompt"] = suggestion
 
     for message in st.session_state["chat_history"]:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    query = st.chat_input("Ask about the current shortlist...")
+    query = st.chat_input("Ask about the current shortlist...", key="recruiter_chat_input")
     if not query:
         query = st.session_state.pop("pending_chat_prompt", None)
     if not query:
@@ -565,8 +683,11 @@ def render_recruiter_chat_view(ranking: RankingResult, jd: JobDescription) -> No
         st.markdown(query)
 
     with st.chat_message("assistant"):
-        if not is_gemini_available():
-            response = "Gemini AI is unavailable. I can still answer via deterministic comparisons only when supported by the current evidence."
+        if not ai_active:
+            response = (
+                "Gemini AI is unavailable. I can still answer via deterministic "
+                "comparisons when supported by the current evidence."
+            )
         else:
             with st.spinner("Analyzing shortlist evidence..."):
                 response = chat_with_recruiter(
@@ -576,14 +697,17 @@ def render_recruiter_chat_view(ranking: RankingResult, jd: JobDescription) -> No
                     jd=jd,
                 )
         st.markdown(response)
-    st.session_state["chat_history"].append({"role": "assistant", "content": response})
+
+    st.session_state["chat_history"].append(
+        {"role": "assistant", "content": response}
+    )
 
 
 def render_jd_analysis_view(jd: JobDescription) -> None:
     st.subheader("JD Analysis")
-    st.markdown(f"### {_safe(jd.role_title or 'Job Description')} ")
+    st.markdown(f"### {_safe(jd.role_title or 'Job Description')}", unsafe_allow_html=True)
     if jd.company:
-        st.markdown(f"**Company:** {_safe(jd.company)}")
+        st.markdown(f"**Company:** {_safe(jd.company)}", unsafe_allow_html=True)
 
     left, right = st.columns(2)
     with left:
@@ -605,7 +729,7 @@ def render_jd_analysis_view(jd: JobDescription) -> None:
     st.markdown("### JD Fairness & Narrowness Check")
     st.caption("Advisory only. Findings never change candidate scores or rankings.")
 
-    if not is_gemini_available():
+    if not _gemini_available_cached():
         st.info("Configure GEMINI_API_KEY to run the AI fairness analysis.")
         return
 
@@ -613,9 +737,9 @@ def render_jd_analysis_view(jd: JobDescription) -> None:
         with st.spinner("Reviewing JD language..."):
             try:
                 st.session_state["jd_fairness_report"] = analyze_jd_fairness(jd)
-            except Exception as e:
+            except Exception as exc:
                 logger.exception("JD fairness analysis failed")
-                st.error(f"Fairness analysis failed: {e}")
+                st.error(f"Fairness analysis failed: {exc}")
 
     report: JDFairnessReport | None = st.session_state.get("jd_fairness_report")
     if not report:
@@ -625,8 +749,8 @@ def render_jd_analysis_view(jd: JobDescription) -> None:
     if not report.findings:
         st.success("No potentially narrow phrasing was detected.")
     else:
-        for idx, finding in enumerate(report.findings, start=1):
-            st.markdown(f"#### Finding {idx}: {_safe(finding.phrase)}")
+        for index, finding in enumerate(report.findings, start=1):
+            st.markdown(f"#### Finding {index}: {_safe(finding.phrase)}")
             st.markdown(f"**Category:** {finding.issue}")
             st.markdown(f"**Why review it:** {finding.rationale}")
             st.markdown(f"**Possible alternative:** {finding.suggested_alternative}")
@@ -646,18 +770,19 @@ def run_ui() -> None:
         type="primary",
         disabled=not can_run,
         use_container_width=True,
+        key="run_shortlisting",
     ):
-        run_pipeline(jd_file, resume_files)
+        _run_pipeline(jd_file, resume_files)
 
-    if "ranking" not in st.session_state:
+    ranking: RankingResult | None = st.session_state.get("ranking")
+    jd: JobDescription | None = st.session_state.get("jd")
+    if ranking is None or jd is None:
         st.info("Upload a Job Description and candidate resumes to start the shortlist.")
         return
 
-    ranking: RankingResult = st.session_state["ranking"]
-    jd: JobDescription = st.session_state["jd"]
-
     st.divider()
-    tab_shortlist, tab_compare, tab_insights, tab_chat, tab_jd = st.tabs([
+
+    tabs = st.tabs([
         "Shortlist",
         "Compare",
         "Candidate Insights",
@@ -665,19 +790,15 @@ def run_ui() -> None:
         "JD Analysis",
     ])
 
-    with tab_shortlist:
+    with tabs[0]:
         render_shortlist_view(ranking, jd)
-
-    with tab_compare:
+    with tabs[1]:
         render_compare_view(ranking)
-
-    with tab_insights:
+    with tabs[2]:
         render_candidate_insights_view(ranking, jd)
-
-    with tab_chat:
+    with tabs[3]:
         render_recruiter_chat_view(ranking, jd)
-
-    with tab_jd:
+    with tabs[4]:
         render_jd_analysis_view(jd)
 
 
