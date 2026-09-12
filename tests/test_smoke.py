@@ -117,3 +117,18 @@ def test_end_to_end_smoke(tmp_path):
     assert len(resume.projects) >= 2
     assert len(resume.education) >= 1
     assert len(resume.certifications) >= 1
+
+    # 4. Shortlisting & Ranking (Phases 3, 4, 5)
+    from app.matching.pipeline import shortlist_candidates
+    ranking = shortlist_candidates(jd, {"Rahul_Sharma_Resume.pdf": resume})
+    assert len(ranking.candidates) == 1
+    top = ranking.candidates[0]
+    assert top.rank == 1
+    assert top.candidate_name == "Rahul Sharma"
+    assert top.filename == "Rahul_Sharma_Resume.pdf"
+    assert 0.0 <= top.keyword_score <= 100.0
+    assert 0.0 <= top.semantic_score <= 100.0
+    assert 0.0 <= top.final_score <= 100.0
+    expected_final = round(0.50 * top.keyword_score + 0.50 * top.semantic_score, 2)
+    assert top.final_score == expected_final
+    assert len(top.semantic_evidence) > 0

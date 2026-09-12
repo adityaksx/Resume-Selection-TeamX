@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Any
 from pydantic import BaseModel, Field
 
 
@@ -9,6 +10,12 @@ class CandidateResult(BaseModel):
     """Complete scoring result for a single candidate."""
 
     candidate_name: str
+    filename: str | None = Field(
+        default=None, description="Original resume filename"
+    )
+    rank: int | None = Field(
+        default=None, description="Ranking position (1-indexed)"
+    )
     keyword_score: float = Field(
         default=0.0, ge=0.0, le=100.0, description="Keyword matching score (0-100)"
     )
@@ -25,7 +32,13 @@ class CandidateResult(BaseModel):
     matched_preferred_skills: list[str] = Field(default_factory=list)
     missing_preferred_skills: list[str] = Field(default_factory=list)
 
-    # Top-3 explanation (generated deterministically from evidence)
+    # Requirement-level semantic evidence
+    semantic_evidence: list[dict[str, Any]] = Field(
+        default_factory=list,
+        description="Requirement-level semantic evidence matches",
+    )
+
+    # Top-3 explanation (generated deterministically from evidence in Phase 6)
     explanation: str | None = Field(
         default=None, description="Natural-language explanation (top 3 only)"
     )
