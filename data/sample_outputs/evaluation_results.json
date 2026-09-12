@@ -1,0 +1,714 @@
+{
+  "job_description": {
+    "filename": "Sample_JD_FullStack.pdf",
+    "role_title": "Full Stack Developer Intern",
+    "company": "Nexora Innovations",
+    "required_skills": [
+      "React",
+      "Node.js",
+      "MongoDB",
+      "REST API",
+      "Git"
+    ],
+    "preferred_skills": [
+      "Docker",
+      "TypeScript",
+      "AWS"
+    ]
+  },
+  "statistics": {
+    "candidate_count": 18,
+    "final_score": {
+      "highest": 78.68,
+      "lowest": 15.22,
+      "mean": 49.68,
+      "median": 49.08,
+      "std_dev": 21.98,
+      "range": 63.46
+    },
+    "keyword_score": {
+      "highest": 100.0,
+      "lowest": 0.0,
+      "mean": 54.56,
+      "median": 53.5,
+      "std_dev": 35.66
+    },
+    "semantic_score": {
+      "highest": 57.36,
+      "lowest": 30.44,
+      "mean": 44.81,
+      "median": 44.87,
+      "std_dev": 8.58
+    }
+  },
+  "edge_case_checks": [
+    {
+      "test": "Java vs JavaScript separation",
+      "candidate": "Suresh Menon",
+      "passed": true,
+      "detail": "Java candidate matched required skills: ['Git']"
+    },
+    {
+      "test": "C vs C++ isolation",
+      "candidate": "Zoe Castillo",
+      "passed": true,
+      "detail": "C programmer matched skills: ['Git']"
+    },
+    {
+      "test": "React vs React Native separation",
+      "candidate": "Liam O'Connor",
+      "passed": true,
+      "detail": "React Native developer matched required: ['Git']"
+    },
+    {
+      "test": "AWS vs Azure isolation",
+      "candidate": "Brandon Taylor",
+      "passed": true,
+      "detail": "Azure cloud engineer matched preferred: ['Docker']"
+    },
+    {
+      "test": "Skill alias normalization (ReactJS, NodeJS, Mongo DB, RESTful API)",
+      "candidate": "Priya Patel",
+      "passed": true,
+      "detail": "Priya Patel matched required: ['React', 'Node.js', 'MongoDB', 'REST API', 'Git'], missing: []"
+    }
+  ],
+  "extraction_audit": [
+    {
+      "filename": "Aisha_Khan_Resume.pdf",
+      "candidate_name": "Aisha Khan",
+      "raw_length": 787,
+      "skills_count": 10,
+      "experience_count": 1,
+      "projects_count": 1,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Alex_Rivera_Resume.pdf",
+      "candidate_name": "Alex Rivera",
+      "raw_length": 866,
+      "skills_count": 10,
+      "experience_count": 1,
+      "projects_count": 1,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Ananya_Deshmukh_Resume.pdf",
+      "candidate_name": "Ananya Deshmukh",
+      "raw_length": 557,
+      "skills_count": 9,
+      "experience_count": 1,
+      "projects_count": 0,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Brandon_Taylor_Resume.pdf",
+      "candidate_name": "Brandon Taylor",
+      "raw_length": 569,
+      "skills_count": 4,
+      "experience_count": 1,
+      "projects_count": 0,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Carlos_Mendoza_Resume.pdf",
+      "candidate_name": "Carlos Mendoza",
+      "raw_length": 671,
+      "skills_count": 8,
+      "experience_count": 1,
+      "projects_count": 1,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "David_Kim_Resume.pdf",
+      "candidate_name": "David Kim",
+      "raw_length": 630,
+      "skills_count": 8,
+      "experience_count": 1,
+      "projects_count": 1,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Elena_Rostov_Resume.pdf",
+      "candidate_name": "Elena Rostov",
+      "raw_length": 621,
+      "skills_count": 6,
+      "experience_count": 1,
+      "projects_count": 0,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Fatima_Al_Mansoor_Resume.pdf",
+      "candidate_name": "Fatima Al-Mansoor",
+      "raw_length": 570,
+      "skills_count": 9,
+      "experience_count": 1,
+      "projects_count": 0,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Liam_OConnor_Resume.pdf",
+      "candidate_name": "Liam O'Connor",
+      "raw_length": 682,
+      "skills_count": 5,
+      "experience_count": 1,
+      "projects_count": 1,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Marcus_Vance_Resume.pdf",
+      "candidate_name": "Marcus Vance",
+      "raw_length": 736,
+      "skills_count": 11,
+      "experience_count": 1,
+      "projects_count": 1,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Maya_Lin_Resume.pdf",
+      "candidate_name": "Maya Lin",
+      "raw_length": 550,
+      "skills_count": 3,
+      "experience_count": 1,
+      "projects_count": 0,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Nina_Ivanova_Resume.pdf",
+      "candidate_name": "Nina Ivanova",
+      "raw_length": 684,
+      "skills_count": 9,
+      "experience_count": 1,
+      "projects_count": 0,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Oliver_Smith_Resume.pdf",
+      "candidate_name": "Oliver Smith",
+      "raw_length": 739,
+      "skills_count": 8,
+      "experience_count": 1,
+      "projects_count": 1,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Priya_Patel_Resume.pdf",
+      "candidate_name": "Priya Patel",
+      "raw_length": 867,
+      "skills_count": 11,
+      "experience_count": 1,
+      "projects_count": 1,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Rahul_Sharma_Resume.pdf",
+      "candidate_name": "Rahul Sharma",
+      "raw_length": 988,
+      "skills_count": 16,
+      "experience_count": 1,
+      "projects_count": 2,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Sara_Chen_Resume.pdf",
+      "candidate_name": "Sara Chen",
+      "raw_length": 708,
+      "skills_count": 11,
+      "experience_count": 1,
+      "projects_count": 1,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Suresh_Menon_Resume.pdf",
+      "candidate_name": "Suresh Menon",
+      "raw_length": 568,
+      "skills_count": 7,
+      "experience_count": 1,
+      "projects_count": 0,
+      "education_count": 1,
+      "issues": []
+    },
+    {
+      "filename": "Zoe_Castillo_Resume.pdf",
+      "candidate_name": "Zoe Castillo",
+      "raw_length": 533,
+      "skills_count": 3,
+      "experience_count": 1,
+      "projects_count": 0,
+      "education_count": 1,
+      "issues": []
+    }
+  ],
+  "candidates": [
+    {
+      "rank": 1,
+      "candidate_name": "Rahul Sharma",
+      "filename": "Rahul_Sharma_Resume.pdf",
+      "final_score": 78.68,
+      "keyword_score": 100.0,
+      "semantic_score": 57.36,
+      "matched_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API",
+        "Git"
+      ],
+      "missing_required_skills": [],
+      "matched_preferred_skills": [
+        "Docker",
+        "TypeScript",
+        "AWS"
+      ],
+      "missing_preferred_skills": [],
+      "explanation": "Candidate: Rahul Sharma\nFinal Score: 78.68 / 100\nKeyword Score: 100.00 / 100 | Semantic Score: 57.36 / 100\n\nWhy this candidate ranked highly:\n- Matches all 5 of 5 required skills (100.0%).\n- Explicit required skill matches: React, Node.js, MongoDB, REST API, Git.\n- Keyword score is 100.00/100 based on explicit skill and alias matching.\n- Semantic similarity score is 57.36/100 across requirement descriptions.\n- Demonstrates preferred qualifications: Docker, TypeScript, AWS.\n\nMatched required skills:\nReact, Node.js, MongoDB, REST API, Git\n\nMissing required skills:\nNone (all required skills matched)\n\nPreferred skills matched:\nDocker, TypeScript, AWS\n\nPreferred skills missing:\nNone\n\nStrong semantic evidence:\n- JD Requirement: \"? Build and scale backend REST APIs using Node.js and Express. ? Develop interactive, responsive frontend web user interfaces with React. ? Design schema models and optimize queries in MongoDB. ? Maintain version control workflows using Git and participate in agile sprints.\"\n  Resume Evidence: \"Experience: Full Stack Intern at WebSphere Labs. Developed REST APIs using Node.js, Express, and MongoDB. Built responsive UI components with React and Tailwind CSS. Managed codebase versioning and feature branching with Git.\"\n  Similarity: 75.0%\n- JD Requirement: \"? Currently pursuing a B.Tech or B.S. in Computer Science or related engineering field. ? Strong foundational understanding of software development and database design.\"\n  Resume Evidence: \"Education: B.Tech in Computer Science from National Institute of Technology.\"\n  Similarity: 67.8%\n- JD Requirement: \"Familiarity with AWS\"\n  Resume Evidence: \"Certifications: AWS Certified Cloud Practitioner.\"\n  Similarity: 60.1%",
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 2,
+      "candidate_name": "Aisha Khan",
+      "filename": "Aisha_Khan_Resume.pdf",
+      "final_score": 76.14,
+      "keyword_score": 100.0,
+      "semantic_score": 52.29,
+      "matched_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API",
+        "Git"
+      ],
+      "missing_required_skills": [],
+      "matched_preferred_skills": [
+        "Docker",
+        "TypeScript",
+        "AWS"
+      ],
+      "missing_preferred_skills": [],
+      "explanation": "Candidate: Aisha Khan\nFinal Score: 76.14 / 100\nKeyword Score: 100.00 / 100 | Semantic Score: 52.29 / 100\n\nWhy this candidate ranked highly:\n- Matches all 5 of 5 required skills (100.0%).\n- Explicit required skill matches: React, Node.js, MongoDB, REST API, Git.\n- Keyword score is 100.00/100 based on explicit skill and alias matching.\n- Semantic similarity score is 52.29/100 across requirement descriptions.\n- Demonstrates preferred qualifications: Docker, TypeScript, AWS.\n\nMatched required skills:\nReact, Node.js, MongoDB, REST API, Git\n\nMissing required skills:\nNone (all required skills matched)\n\nPreferred skills matched:\nDocker, TypeScript, AWS\n\nPreferred skills missing:\nNone\n\nStrong semantic evidence:\n- JD Requirement: \"? Build and scale backend REST APIs using Node.js and Express. ? Develop interactive, responsive frontend web user interfaces with React. ? Design schema models and optimize queries in MongoDB. ? Maintain version control workflows using Git and participate in agile sprints.\"\n  Resume Evidence: \"Experience: Software Engineering Intern at NextEra Solutions. Built scalable REST APIs using Node.js and Express backed by MongoDB. Implemented user authentication and responsive dashboards using React. Deployed serverless microservices to AWS cloud infrastructure. Collaborated in an agile scrum team using Git for version control.\"\n  Similarity: 75.5%\n- JD Requirement: \"? Currently pursuing a B.Tech or B.S. in Computer Science or related engineering field. ? Strong foundational understanding of software development and database design.\"\n  Resume Evidence: \"Education: B.S. in Computer Science from University of Illinois Urbana.\"\n  Similarity: 62.1%\n- JD Requirement: \"Experience with Node.js\"\n  Resume Evidence: \"Technical Skills: React, Node.js, Express, MongoDB, REST API, JavaScript, AWS, Git, TypeScript, Docker.\"\n  Similarity: 55.6%",
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 3,
+      "candidate_name": "Priya Patel",
+      "filename": "Priya_Patel_Resume.pdf",
+      "final_score": 74.93,
+      "keyword_score": 95.0,
+      "semantic_score": 54.86,
+      "matched_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API",
+        "Git"
+      ],
+      "missing_required_skills": [],
+      "matched_preferred_skills": [
+        "Docker",
+        "TypeScript"
+      ],
+      "missing_preferred_skills": [
+        "AWS"
+      ],
+      "explanation": "Candidate: Priya Patel\nFinal Score: 74.93 / 100\nKeyword Score: 95.00 / 100 | Semantic Score: 54.86 / 100\n\nWhy this candidate ranked highly:\n- Matches all 5 of 5 required skills (100.0%).\n- Explicit required skill matches: React, Node.js, MongoDB, REST API, Git.\n- Keyword score is 95.00/100 based on explicit skill and alias matching.\n- Semantic similarity score is 54.86/100 across requirement descriptions.\n- Demonstrates preferred qualifications: Docker, TypeScript.\n\nMatched required skills:\nReact, Node.js, MongoDB, REST API, Git\n\nMissing required skills:\nNone (all required skills matched)\n\nPreferred skills matched:\nDocker, TypeScript\n\nPreferred skills missing:\nAWS\n\nStrong semantic evidence:\n- JD Requirement: \"? Build and scale backend REST APIs using Node.js and Express. ? Develop interactive, responsive frontend web user interfaces with React. ? Design schema models and optimize queries in MongoDB. ? Maintain version control workflows using Git and participate in agile sprints.\"\n  Resume Evidence: \"Experience: Full Stack Software Intern at CloudTech Labs. Developed and deployed RESTful APIs using NodeJS and Express. Designed database collections and aggregation pipelines in Mongo DB. Implemented interactive stateful UI components using ReactJS. Collaborated with remote development teams using Git.\"\n  Similarity: 80.4%\n- JD Requirement: \"? Currently pursuing a B.Tech or B.S. in Computer Science or related engineering field. ? Strong foundational understanding of software development and database design.\"\n  Resume Evidence: \"Education: B.S. in Computer Science from San Jose State University.\"\n  Similarity: 66.0%\n- JD Requirement: \"Experience with Node.js\"\n  Resume Evidence: \"Experience: Full Stack Software Intern at CloudTech Labs. Developed and deployed RESTful APIs using NodeJS and Express. Designed database collections and aggregation pipelines in Mongo DB. Implemented interactive stateful UI components using ReactJS. Collaborated with remote development teams using Git.\"\n  Similarity: 62.6%",
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 4,
+      "candidate_name": "Nina Ivanova",
+      "filename": "Nina_Ivanova_Resume.pdf",
+      "final_score": 74.56,
+      "keyword_score": 95.0,
+      "semantic_score": 54.11,
+      "matched_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API",
+        "Git"
+      ],
+      "missing_required_skills": [],
+      "matched_preferred_skills": [
+        "TypeScript",
+        "AWS"
+      ],
+      "missing_preferred_skills": [
+        "Docker"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 5,
+      "candidate_name": "Oliver Smith",
+      "filename": "Oliver_Smith_Resume.pdf",
+      "final_score": 74.01,
+      "keyword_score": 95.0,
+      "semantic_score": 53.02,
+      "matched_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API",
+        "Git"
+      ],
+      "missing_required_skills": [],
+      "matched_preferred_skills": [
+        "Docker",
+        "TypeScript"
+      ],
+      "missing_preferred_skills": [
+        "AWS"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 6,
+      "candidate_name": "Ananya Deshmukh",
+      "filename": "Ananya_Deshmukh_Resume.pdf",
+      "final_score": 68.38,
+      "keyword_score": 85.0,
+      "semantic_score": 51.75,
+      "matched_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API",
+        "Git"
+      ],
+      "missing_required_skills": [],
+      "matched_preferred_skills": [],
+      "missing_preferred_skills": [
+        "Docker",
+        "TypeScript",
+        "AWS"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 7,
+      "candidate_name": "Fatima Al-Mansoor",
+      "filename": "Fatima_Al_Mansoor_Resume.pdf",
+      "final_score": 62.13,
+      "keyword_score": 73.0,
+      "semantic_score": 51.26,
+      "matched_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API"
+      ],
+      "missing_required_skills": [
+        "Git"
+      ],
+      "matched_preferred_skills": [
+        "Docker"
+      ],
+      "missing_preferred_skills": [
+        "TypeScript",
+        "AWS"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 8,
+      "candidate_name": "Marcus Vance",
+      "filename": "Marcus_Vance_Resume.pdf",
+      "final_score": 61.28,
+      "keyword_score": 73.0,
+      "semantic_score": 49.57,
+      "matched_required_skills": [
+        "Node.js",
+        "MongoDB",
+        "REST API",
+        "Git"
+      ],
+      "missing_required_skills": [
+        "React"
+      ],
+      "matched_preferred_skills": [
+        "Docker"
+      ],
+      "missing_preferred_skills": [
+        "TypeScript",
+        "AWS"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 9,
+      "candidate_name": "Alex Rivera",
+      "filename": "Alex_Rivera_Resume.pdf",
+      "final_score": 57.74,
+      "keyword_score": 68.0,
+      "semantic_score": 47.48,
+      "matched_required_skills": [
+        "React",
+        "MongoDB",
+        "REST API",
+        "Git"
+      ],
+      "missing_required_skills": [
+        "Node.js"
+      ],
+      "matched_preferred_skills": [],
+      "missing_preferred_skills": [
+        "Docker",
+        "TypeScript",
+        "AWS"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 10,
+      "candidate_name": "Carlos Mendoza",
+      "filename": "Carlos_Mendoza_Resume.pdf",
+      "final_score": 40.41,
+      "keyword_score": 39.0,
+      "semantic_score": 41.82,
+      "matched_required_skills": [
+        "REST API",
+        "Git"
+      ],
+      "missing_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB"
+      ],
+      "matched_preferred_skills": [
+        "Docker"
+      ],
+      "missing_preferred_skills": [
+        "TypeScript",
+        "AWS"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 11,
+      "candidate_name": "David Kim",
+      "filename": "David_Kim_Resume.pdf",
+      "final_score": 39.41,
+      "keyword_score": 39.0,
+      "semantic_score": 39.82,
+      "matched_required_skills": [
+        "React",
+        "Git"
+      ],
+      "missing_required_skills": [
+        "Node.js",
+        "MongoDB",
+        "REST API"
+      ],
+      "matched_preferred_skills": [
+        "TypeScript"
+      ],
+      "missing_preferred_skills": [
+        "Docker",
+        "AWS"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 12,
+      "candidate_name": "Elena Rostov",
+      "filename": "Elena_Rostov_Resume.pdf",
+      "final_score": 32.89,
+      "keyword_score": 27.0,
+      "semantic_score": 38.77,
+      "matched_required_skills": [
+        "Git"
+      ],
+      "missing_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API"
+      ],
+      "matched_preferred_skills": [
+        "Docker",
+        "AWS"
+      ],
+      "missing_preferred_skills": [
+        "TypeScript"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 13,
+      "candidate_name": "Liam O'Connor",
+      "filename": "Liam_OConnor_Resume.pdf",
+      "final_score": 32.13,
+      "keyword_score": 22.0,
+      "semantic_score": 42.26,
+      "matched_required_skills": [
+        "Git"
+      ],
+      "missing_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API"
+      ],
+      "matched_preferred_skills": [
+        "TypeScript"
+      ],
+      "missing_preferred_skills": [
+        "Docker",
+        "AWS"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 14,
+      "candidate_name": "Suresh Menon",
+      "filename": "Suresh_Menon_Resume.pdf",
+      "final_score": 29.46,
+      "keyword_score": 22.0,
+      "semantic_score": 36.92,
+      "matched_required_skills": [
+        "Git"
+      ],
+      "missing_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API"
+      ],
+      "matched_preferred_skills": [
+        "Docker"
+      ],
+      "missing_preferred_skills": [
+        "TypeScript",
+        "AWS"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 15,
+      "candidate_name": "Brandon Taylor",
+      "filename": "Brandon_Taylor_Resume.pdf",
+      "final_score": 27.56,
+      "keyword_score": 22.0,
+      "semantic_score": 33.12,
+      "matched_required_skills": [
+        "Git"
+      ],
+      "missing_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API"
+      ],
+      "matched_preferred_skills": [
+        "Docker"
+      ],
+      "missing_preferred_skills": [
+        "TypeScript",
+        "AWS"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 16,
+      "candidate_name": "Zoe Castillo",
+      "filename": "Zoe_Castillo_Resume.pdf",
+      "final_score": 24.84,
+      "keyword_score": 17.0,
+      "semantic_score": 32.67,
+      "matched_required_skills": [
+        "Git"
+      ],
+      "missing_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API"
+      ],
+      "matched_preferred_skills": [],
+      "missing_preferred_skills": [
+        "Docker",
+        "TypeScript",
+        "AWS"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 17,
+      "candidate_name": "Sara Chen",
+      "filename": "Sara_Chen_Resume.pdf",
+      "final_score": 24.5,
+      "keyword_score": 10.0,
+      "semantic_score": 39.01,
+      "matched_required_skills": [],
+      "missing_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API",
+        "Git"
+      ],
+      "matched_preferred_skills": [
+        "Docker",
+        "AWS"
+      ],
+      "missing_preferred_skills": [
+        "TypeScript"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    },
+    {
+      "rank": 18,
+      "candidate_name": "Maya Lin",
+      "filename": "Maya_Lin_Resume.pdf",
+      "final_score": 15.22,
+      "keyword_score": 0.0,
+      "semantic_score": 30.44,
+      "matched_required_skills": [],
+      "missing_required_skills": [
+        "React",
+        "Node.js",
+        "MongoDB",
+        "REST API",
+        "Git"
+      ],
+      "matched_preferred_skills": [],
+      "missing_preferred_skills": [
+        "Docker",
+        "TypeScript",
+        "AWS"
+      ],
+      "explanation": null,
+      "semantic_evidence_count": 10
+    }
+  ]
+}
