@@ -13,30 +13,26 @@ load_dotenv()
 class Settings:
     """Immutable application settings loaded from environment variables."""
 
-    gemini_api_key: str = field(default_factory=lambda: os.getenv("GEMINI_API_KEY", ""))
-
-    # Model configuration
-    gemini_model: str = "gemini-2.0-flash"
+    # Model configuration (local sentence-transformers)
     embedding_model: str = "all-MiniLM-L6-v2"
 
-    # Scoring weights (plan.md §11)
+    # Scoring weights (plan.md §13)
     keyword_weight: float = 0.50
     semantic_weight: float = 0.50
 
-    # Keyword sub-weights (plan.md §9)
+    # Keyword sub-weights (plan.md §11)
     required_skill_weight: float = 0.85
     preferred_skill_weight: float = 0.15
 
-    # Fuzzy matching threshold (plan.md §8)
+    # Fuzzy matching threshold (plan.md §12)
     fuzzy_match_threshold: int = 85
 
     def validate(self) -> None:
-        """Raise ValueError if critical settings are missing."""
-        if not self.gemini_api_key:
-            raise ValueError(
-                "GEMINI_API_KEY is not set. "
-                "Copy .env.example to .env and add your key."
-            )
+        """Validate application settings.
+        
+        The engine is 100% deterministic / local ML, so no external API keys are required.
+        """
+        pass
 
 
 def get_settings() -> Settings:

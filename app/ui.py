@@ -1,6 +1,6 @@
 """Streamlit UI for the Smart Shortlisting Engine.
 
-Phase 2: Upload PDFs → extract text → LLM extraction → structured display.
+Phase 2: Upload PDFs → extract text → deterministic extraction → structured display.
 """
 
 import logging
@@ -8,8 +8,8 @@ import logging
 import streamlit as st
 
 from app.parsers.pdf_parser import extract_text_from_uploaded_file, PDFParsingError
-from app.llm.jd_extractor import extract_jd
-from app.llm.resume_extractor import extract_resume
+from app.extraction.jd_extractor import extract_jd
+from app.extraction.resume_extractor import extract_resume
 from app.matching.skill_normalizer import normalize_skills
 from app.models.jd_models import JobDescription
 from app.models.resume_models import Resume
@@ -172,12 +172,12 @@ def run_pipeline(jd_file, resume_files: list) -> None:
 
     st.divider()
 
-    # --- Step 2: LLM Structured Extraction ---
-    st.header("Step 2: LLM Structured Extraction")
+    # --- Step 2: Deterministic Extraction ---
+    st.header("Step 2: Deterministic Extraction (Rule-Based & NLP)")
 
     # JD extraction
     jd: JobDescription | None = None
-    with st.spinner("🤖 Extracting structured JD via Gemini..."):
+    with st.spinner("⚙️ Extracting structured JD..."):
         try:
             jd = extract_jd(jd_text)
             # Normalize JD skills
@@ -191,11 +191,11 @@ def run_pipeline(jd_file, resume_files: list) -> None:
 
     # Resume extraction
     resumes: dict[str, Resume] = {}
-    progress = st.progress(0, text="Extracting structured resumes via Gemini...")
+    progress = st.progress(0, text="Extracting structured resumes...")
     for i, (name, text) in enumerate(resume_texts.items()):
-        with st.spinner(f"🤖 Extracting {name}..."):
+        with st.spinner(f"⚙️ Extracting {name}..."):
             try:
-                resume = extract_resume(text)
+                resume = extract_resume(text, filename=name)
                 # Normalize resume skills
                 resume.skills = normalize_skills(resume.skills)
                 # Also normalize project technologies
