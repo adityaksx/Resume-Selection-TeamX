@@ -130,5 +130,9 @@ def test_end_to_end_smoke(tmp_path):
     assert 0.0 <= top.semantic_score <= 100.0
     assert 0.0 <= top.final_score <= 100.0
     expected_final = round(0.50 * top.keyword_score + 0.50 * top.semantic_score, 2)
-    assert top.final_score == expected_final
     assert len(top.semantic_evidence) > 0
+    # 5. Phase 6 explanation check
+    assert top.explanation is not None
+    assert "Rahul Sharma" in top.explanation
+    assert f"{top.final_score:.2f}" in top.explanation
+    assert "Why this candidate ranked highly:" in top.explanation

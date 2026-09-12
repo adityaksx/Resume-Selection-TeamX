@@ -12,6 +12,7 @@ from typing import Mapping, Sequence
 
 from sentence_transformers import SentenceTransformer
 
+from app.explanation.explanation_generator import attach_top_explanations
 from app.matching.keyword_matcher import compute_keyword_score
 from app.matching.scorer import compute_final_score, rank_candidates
 from app.matching.semantic_matcher import compute_semantic_details, get_embedding_model
@@ -95,6 +96,7 @@ def shortlist_candidates(
             scored_candidates.append(cand_res)
 
     ranking = rank_candidates(scored_candidates, jd_role_title=jd.role_title)
+    ranking = attach_top_explanations(ranking, top_k=3)
     logger.info(
         "Shortlisted and ranked %d candidates. Top candidate: '%s' (score=%.2f)",
         len(ranking.candidates),

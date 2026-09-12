@@ -167,8 +167,30 @@ def display_ranking_results(ranking: RankingResult) -> None:
 
     st.markdown("---")
 
-    # 2. Prominent Full Ranking Table
-    st.subheader(f"📋 Ranked Shortlist ({len(ranking.candidates)} Candidates)")
+    # 2. Prominent Top 3 Shortlist with Explanations
+    st.subheader("🏅 Top 3 Shortlist & Explanations")
+    st.caption("Transparent, deterministic explanations derived strictly from structured keyword and semantic evidence (no LLM generation).")
+
+    top_3 = ranking.top_3
+    medal_icons = ["🥇", "🥈", "🥉"]
+
+    for idx, cand in enumerate(top_3):
+        medal = medal_icons[idx] if idx < len(medal_icons) else f"#{idx+1}"
+        with st.container():
+            t_col1, t_col2 = st.columns([3, 1])
+            with t_col1:
+                st.markdown(f"### {medal} #{cand.rank} {cand.candidate_name}")
+                st.caption(f"**Keyword Score:** {cand.keyword_score:.2f} | **Semantic Score:** {cand.semantic_score:.2f} | **Filename:** {cand.filename or 'N/A'}")
+            with t_col2:
+                st.metric("Final Score", f"{cand.final_score:.2f}")
+
+            if cand.explanation:
+                with st.expander(f"📋 Explanation: Why #{cand.rank} {cand.candidate_name} Ranked Highly", expanded=True):
+                    st.text(cand.explanation)
+            st.divider()
+
+    # 3. Prominent Full Ranking Table
+    st.subheader(f"📋 Full Shortlist Ranking ({len(ranking.candidates)} Candidates)")
     st.caption("Final Score = 50% Keyword Score + 50% Local Semantic Score. Tie-breakers: Keyword Score → Matched Required Skills → Name.")
 
     table_rows = []
@@ -215,6 +237,10 @@ def display_ranking_results(ranking: RankingResult) -> None:
     sc1.metric("⭐ Final Score", f"{selected_candidate.final_score:.2f} / 100")
     sc2.metric("🔑 Keyword Score", f"{selected_candidate.keyword_score:.2f} / 100")
     sc3.metric("🧠 Semantic Score", f"{selected_candidate.semantic_score:.2f} / 100")
+
+    if selected_candidate.explanation:
+        with st.expander(f"📝 Top-3 Shortlist Explanation for {selected_candidate.candidate_name}", expanded=False):
+            st.text(selected_candidate.explanation)
 
     # Matched and missing skills breakdown
     col_req, col_pref = st.columns(2)
