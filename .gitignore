@@ -1,0 +1,13 @@
+.env
+__pycache__/
+.venv/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+*.pdf
+data/jd/*.pdf
+data/resumes/*.pdf
+.streamlit/
